@@ -28,4 +28,19 @@ node dashboard/server.mjs     # http://127.0.0.1:4788/
 ```
 
 ## Status
-Personal tooling, Spanish UI. Private workspace content (client work, sales research, personal documents, agent configs) is intentionally not included. No automated tests in this repo.
+🟡 Personal tooling, Spanish UI. Private workspace content (client work, sales research, personal documents, agent configs) is intentionally not included. No automated tests in this repo.
+
+## Folder guide
+
+| Folder | What it holds |
+|---|---|
+| [dashboard/](dashboard/README.md) | Local project dashboard and control server |
+| [dashboard/data/](dashboard/data/README.md) | Sanitized sample project registry |
+| [panel/](panel/README.md) | Static admin panel |
+| [docs/](docs/README.md) | Engineering reviews and audit evidence |
+| [docs/audits/](docs/audits/README.md) | Runtime-isolation audit record |
+| [docs/engineering/](docs/engineering/README.md) | Design reviews (advisory, not approved specs) |
+
+---
+
+Built by Monoga · [github.com/Monoga2025](https://github.com/Monoga2025)
