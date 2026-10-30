@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Panel administrativo 2026 · Monoga</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 10h18c0-2-3-3-3-10Z"/><path d="M10 21a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 1v2m0 18v2M1 12h2m18 0h2M4.2 4.2l1.4 1.4m12.8 12.8 1.4 1.4M19.8 4.2l-1.4 1.4M5.6 18.4l-1.4 1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.8 15.5A9 9 0 0 1 8.5 3.2 9 9 0 1 0 20.8 15.5Z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m2 11 10-8 10 8v10H2V11Z"/><path d="M9 21v-7h6v7"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m15.9 8.1-2.4 5.4-5.4 2.4 2.4-5.4 5.4-2.4Z"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M5 21v-2a7 7 0 0 1 14 0v2H5ZM3 8a2 2 0 1 0 0 4m18-4a2 2 0 1 1 0 4M1 20v-2a5 5 0 0 1 3-4m19 6v-2a5 5 0 0 0-3-4"/></symbol>
+    <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 10h5l11-6v16L8 14H3v-4ZM7 14l2 6h3l-2-5"/><path d="M21 10v4"/></symbol>
+    <symbol id="i-bars" viewBox="0 0 24 24"><path d="M4 20v-7h3v7H4Zm7 0V8h3v12h-3Zm7 0V4h3v16h-3Z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M10 2h4l.7 2.3 2 .8 2.1-1.1 2.8 2.8-1.1 2.1.8 2L24 11v4l-2.3.7-.8 2 1.1 2.1-2.8 2.8-2.1-1.1-2 .8L14 24h-4l-.7-2.3-2-.8-2.1 1.1-2.8-2.8 1.1-2.1-.8-2L0 15v-4l2.3-.7.8-2L2 6.2 4.8 3.4l2.1 1.1 2-.8L10 2Z" transform="translate(2 1) scale(.83)"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v7c0 1.7 4 3 9 3s9-1.3 9-3V5M3 12v7c0 1.7 4 3 9 3s9-1.3 9-3v-7"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 2h6m-5 0v8L4 20a2 2 0 0 0 1.7 3h12.6a2 2 0 0 0 1.7-3l-6-10V2M7 16h10"/></symbol>
+    <symbol id="i-checklist" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="m8 10 2 2 5-5m-7 10h8"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M5 2h10l5 5v15H5V2Z"/><path d="M15 2v5h5M8 12h8m-8 4h8"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="11" cy="13" r="9"/><circle cx="11" cy="13" r="5"/><circle cx="11" cy="13" r="1"/><path d="m11 13 9-10 1 4 3 1-13 5Z"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6m-5 3h4m-2-19a8 8 0 0 0-5 14c1 .8 2 1.5 2 2h6c0-.5 1-1.2 2-2a8 8 0 0 0-5-14Z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21 3.5 12.5A5.6 5.6 0 0 1 12 5.3a5.6 5.6 0 0 1 8.5 7.2L12 21Z"/></symbol>
+    <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M4 2 20 12l-8 1-3 8L4 2Z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6m10-6v6M3 10h18"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4V4Z"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 2h6v4H9V2Zm0 9h6m-6 4h6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m7 12 3 3 7-7"/></symbol>
+    <symbol id="i-exclamation" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v8m0 4h.01"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M2 6h8l2 2h10v12H2V6Z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m6 3 15 9-15 9V3Z"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="m2 5 7-3 6 3 7-3v17l-7 3-6-3-7 3V5Zm7-3v17m6-14v17"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="12" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="brand"><span class="brand-name">MONOGA</span><span class="brand-context">PANEL ADMINISTRATIVO 2026</span></div>
+    <label class="global-search"><svg class="icon"><use href="#i-search"></use></svg><input id="search" type="search" placeholder="Buscar en todo el sistema..." autocomplete="off" aria-label="Buscar contenido del panel"><kbd>/</kbd></label>
+    <div class="top-actions">
+      <div class="popover-anchor"><button class="icon-button notification-button" id="notifications-button" type="button" aria-label="Notificaciones de ejemplo" aria-expanded="false" aria-controls="notifications"><svg class="icon"><use href="#i-bell"></use></svg><span class="notification-count">3</span></button><div class="popover" id="notifications" hidden><strong>Recordatorios del panel</strong><p>Estos avisos son ejemplos locales, sin conexión a cuentas.</p><ul><li>Validar el problema antes del piloto.</li><li>Revisar las fuentes de los guiones.</li><li>Confirmar el alcance con Daniel.</li></ul></div></div>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Activar tema oscuro" title="Cambiar tema"><svg class="icon"><use href="#i-sun"></use></svg></button>
+      <button class="profile-button" type="button" data-dialog="profile"><span class="avatar">D</span><span class="profile-copy"><strong>Daniel</strong><small>Administrador</small></span><svg class="icon chevron"><use href="#i-chevron"></use></svg></button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <nav class="sidebar" aria-label="Secciones del panel">
+      <div class="sidebar-group">
+        <a class="nav-item active" href="#inicio"><svg class="icon"><use href="#i-home"></use></svg><span>Inicio</span></a>
+        <a class="nav-item" href="#direccion"><svg class="icon"><use href="#i-compass"></use></svg><span>Dirección</span></a>
+        <a class="nav-item" href="#investigacion"><svg class="icon"><use href="#i-users"></use></svg><span>Investigación<br> de Clientes</span></a>
+        <a class="nav-item" href="#marketing"><svg class="icon"><use href="#i-megaphone"></use></svg><span>Marketing</span></a>
+        <a class="nav-item" href="#ofertas"><svg class="icon"><use href="#i-bars"></use></svg><span>Ofertas y Ventas</span></a>
+        <a class="nav-item" href="#entrega"><svg class="icon"><use href="#i-gear"></use></svg><span>Entrega de IA</span></a>
+        <a class="nav-item" href="#finanzas"><svg class="icon"><use href="#i-database"></use></svg><span>Finanzas</span></a>
+        <a class="nav-item" href="#evidencia"><svg class="icon"><use href="#i-bars"></use></svg><span>Evidencia y Medición</span></a>
+      </div>
+      <div class="sidebar-group utility-nav">
+        <a class="nav-item" href="#pilotos"><svg class="icon"><use href="#i-flask"></use></svg><span>Pilotos</span></a>
+        <button class="nav-item" type="button" data-dialog="tasks"><svg class="icon"><use href="#i-checklist"></use></svg><span>Tareas</span></button>
+        <button class="nav-item" type="button" data-dialog="documents"><svg class="icon"><use href="#i-file"></use></svg><span>Documentos</span></button>
+        <button class="nav-item" type="button" data-dialog="settings"><svg class="icon"><use href="#i-gear"></use></svg><span>Configuración</span></button>
+      </div>
+    </nav>
+
+    <main id="inicio" class="main-content">
+      <section class="welcome-row" aria-labelledby="welcome-title"><div><h1 id="welcome-title">Hola, Daniel <span aria-hidden="true">👋</span></h1><p>Gestiona la integración de IA para profesionales y empresas.</p><span class="demo-label">Vista demostrativa · cifras de ejemplo</span></div><button class="priority-card" type="button" data-dialog="priority"><span class="priority-icon"><svg class="icon"><use href="#i-target"></use></svg></span><span><small>Prioridad actual</small><strong>Definir · Validar · Autorizar</strong></span><svg class="icon priority-arrow"><use href="#i-chevron"></use></svg></button></section>
+
+      <section class="stats-grid" aria-label="Indicadores de ejemplo">
+        <button class="stat-card sky" id="direccion" type="button" data-dialog="direction" data-search="dirección objetivos activos"><span class="stat-icon"><svg class="icon"><use href="#i-compass"></use></svg></span><strong class="stat-label">Dirección</strong><span class="stat-value">5</span><span class="stat-description">objetivos activos</span><span class="stat-change">↑ &nbsp;+20%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 32c12-1 14-13 24-12s10 5 17 0 10-10 19-9S75 4 89 2"/></svg></button>
+        <button class="stat-card mint" id="investigacion" type="button" data-dialog="research" data-search="investigación clientes insights clave"><span class="stat-icon"><svg class="icon"><use href="#i-users"></use></svg></span><strong class="stat-label">Investigación<br> de Clientes</strong><span class="stat-value">12</span><span class="stat-description">insights clave</span><span class="stat-change">↑ &nbsp;+35%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 31c14 0 14-7 23-7s11-7 19-10 12 4 20-3S76 4 89 2"/></svg></button>
+        <button class="stat-card cream" id="marketing" type="button" data-dialog="marketing" data-search="marketing campañas en curso flujo aida"><span class="stat-icon"><svg class="icon"><use href="#i-megaphone"></use></svg></span><strong class="stat-label">Marketing</strong><span class="stat-value">8</span><span class="stat-description">campañas en curso</span><span class="stat-change">↑ &nbsp;+12%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 31c13-4 13-15 26-11s12 6 19 1 12-11 21-10S77 7 89 3"/></svg></button>
+        <button class="stat-card blush" id="ofertas" type="button" data-dialog="sales" data-search="ofertas ventas pilotos activos"><span class="stat-icon"><svg class="icon"><use href="#i-bars"></use></svg></span><strong class="stat-label">Ofertas y Ventas</strong><span class="stat-value">3</span><span class="stat-description">pilotos activos</span><span class="stat-change">↑ &nbsp;+25%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 32c12-8 15-3 25-9s15 2 23-3 14-12 22-13 12-4 18-5"/></svg></button>
+        <button class="stat-card lavender" id="entrega" type="button" data-dialog="delivery" data-search="entrega ia procesos en desarrollo"><span class="stat-icon"><svg class="icon"><use href="#i-gear"></use></svg></span><strong class="stat-label">Entrega de IA</strong><span class="stat-value">6</span><span class="stat-description">procesos en desarrollo</span><span class="stat-change">↑ &nbsp;+18%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 31c14-2 14-9 25-8s13-13 26-13 15 8 26-1S84 6 89 3"/></svg></button>
+        <button class="stat-card aqua" id="finanzas" type="button" data-dialog="finance" data-search="finanzas margen actual euro"><span class="stat-icon"><svg class="icon"><use href="#i-database"></use></svg></span><strong class="stat-label">Finanzas</strong><span class="stat-value">€ 48.5K</span><span class="stat-description">margen actual</span><span class="stat-change">↑ &nbsp;+22%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 32c12-1 16-4 26-11s10 4 21-2 9-12 21-13 12-4 20-5"/></svg></button>
+        <button class="stat-card jade" id="evidencia" type="button" data-dialog="evidence" data-search="evidencia medición resultados validados"><span class="stat-icon"><svg class="icon"><use href="#i-bars"></use></svg></span><strong class="stat-label">Evidencia y Medición</strong><span class="stat-value">9</span><span class="stat-description">resultados validados</span><span class="stat-change">↑ &nbsp;+40%</span><svg class="sparkline" viewBox="0 0 90 34" aria-hidden="true"><path d="M1 32c15-13 18-3 31-11s12-8 21-6 12-8 22-11 10-3 14-3"/></svg></button>
+      </section>
+
+      <div class="dashboard-grid first-row">
+        <section class="panel workflow-panel" id="flujo" aria-labelledby="workflow-heading"><div class="panel-head"><div class="panel-heading"><svg class="icon"><use href="#i-target"></use></svg><h2 id="workflow-heading">Flujo de trabajo de Marketing</h2></div><button class="small-link" type="button" data-dialog="workflow">Ver detalles <svg class="icon"><use href="#i-arrow"></use></svg></button></div><div class="workflow-steps">
+          <button class="step step-blue" type="button" data-stage="investigar"><svg class="icon"><use href="#i-search"></use></svg><strong>1 Investigar</strong><small>8 tareas</small></button>
+          <button class="step step-green" type="button" data-stage="planear"><svg class="icon"><use href="#i-calendar"></use></svg><strong>2 Planear</strong><small>5 tareas</small></button>
+          <button class="step step-yellow" type="button" data-stage="criticar"><svg class="icon"><use href="#i-chat"></use></svg><strong>3 Criticar</strong><small>4 tareas</small></button>
+          <button class="step step-pink" type="button" data-stage="revisar"><svg class="icon"><use href="#i-file"></use></svg><strong>4 Revisar</strong><small>3 tareas</small></button>
+          <button class="step step-purple" type="button" data-stage="crear"><svg class="icon"><use href="#i-bulb"></use></svg><strong>5 Crear</strong><small>7 tareas</small></button>
+          <button class="step step-cyan" type="button" data-stage="validar"><svg class="icon"><use href="#i-check"></use></svg><strong>6 Validar</strong><small>4 tareas</small></button>
+        </div></section>
+        <section class="panel aida-panel" id="modelo-aida" aria-labelledby="aida-heading"><div class="panel-head"><div class="panel-heading"><svg class="icon"><use href="#i-target"></use></svg><h2 id="aida-heading">Modelo AIDA en los contenidos</h2></div><button class="more-button" type="button" data-dialog="aida" aria-label="Detalles de AIDA"><svg class="icon"><use href="#i-more"></use></svg></button></div><div class="aida-grid">
+          <button class="aida-item aida-blue" type="button" data-dialog="aida"><span class="aida-tile"><svg class="icon"><use href="#i-eye"></use></svg><b>Atención</b></span><strong>62%</strong><span class="progress"><i style="width:62%"></i></span></button>
+          <button class="aida-item aida-green" type="button" data-dialog="aida"><span class="aida-tile"><svg class="icon"><use href="#i-bulb"></use></svg><b>Interés</b></span><strong>48%</strong><span class="progress"><i style="width:48%"></i></span></button>
+          <button class="aida-item aida-yellow" type="button" data-dialog="aida"><span class="aida-tile"><svg class="icon"><use href="#i-heart"></use></svg><b>Deseo</b></span><strong>35%</strong><span class="progress"><i style="width:35%"></i></span></button>
+          <button class="aida-item aida-red" type="button" data-dialog="aida"><span class="aida-tile"><svg class="icon"><use href="#i-cursor"></use></svg><b>Acción</b></span><strong>22%</strong><span class="progress"><i style="width:22%"></i></span></button>
+        </div></section>
+      </div>
+
+      <div class="dashboard-grid second-row">
+        <section class="panel problem-panel" id="matriz" aria-labelledby="matrix-heading"><div class="panel-head"><div class="panel-heading"><svg class="icon"><use href="#i-heart"></use></svg><h2 id="matrix-heading">Dolores, beneficios y soluciones</h2></div><button class="more-button" type="button" data-dialog="matrix" aria-label="Detalles de la matriz"><svg class="icon"><use href="#i-more"></use></svg></button></div><div class="matrix-grid">
+          <div class="matrix-column pain" data-search="dolores por validar búsqueda repetida información tareas duplicadas proceso"><h3><span class="matrix-symbol"><svg class="icon"><use href="#i-exclamation"></use></svg></span>Dolores por validar</h3><ul><li>Búsqueda repetida<br> de información</li><li>Tareas duplicadas en un<br> proceso</li></ul></div><svg class="icon matrix-arrow"><use href="#i-arrow"></use></svg>
+          <div class="matrix-column benefit" data-search="beneficios propuestos fuentes fáciles consultar proceso claro"><h3><span class="matrix-symbol"><svg class="icon"><use href="#i-check"></use></svg></span>Beneficios propuestos</h3><ul><li>Fuentes más fáciles de<br> consultar</li><li>Un proceso más claro</li></ul></div><svg class="icon matrix-arrow"><use href="#i-arrow"></use></svg>
+          <div class="matrix-column solution" data-search="cómo resolvemos cuaderno documentos públicos cotejo diagnóstico flujo opciones automatización"><h3><span class="matrix-symbol"><svg class="icon"><use href="#i-bulb"></use></svg></span>Cómo lo resolvemos</h3><ul><li>Cuaderno con documentos<br> públicos y cotejo</li><li>Diagnóstico de flujo y opciones<br> de automatización</li></ul></div>
+        </div></section>
+        <section class="panel metrics-panel" id="metricas" aria-labelledby="metrics-heading"><div class="panel-head"><div class="panel-heading"><svg class="icon"><use href="#i-bars"></use></svg><h2 id="metrics-heading">Métricas clave</h2></div><label class="period-label"><span class="sr-only">Periodo de ejemplo</span><select id="metric-period"><option value="6">Últimos 6 meses</option><option value="3">Últimos 3 meses</option><option value="1">Último mes</option></select></label></div><div class="metric-rows">
+          <div class="metric-row" data-search="leads generados"><span>Leads generados</span><strong data-metric="leads">320</strong><em>↑ &nbsp;+28%</em><span class="tiny-bars blue-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="metric-row" data-search="conversiones pilotos"><span>Conversiones (pilotos)</span><strong data-metric="pilots">24</strong><em>↑ &nbsp;+33%</em><span class="tiny-bars green-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="metric-row" data-search="ingresos estimados ejemplo"><span>Ingresos estimados</span><strong data-metric="income">€72.4K</strong><em>↑ &nbsp;+41%</em><span class="tiny-bars violet-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+        </div></section>
+      </div>
+
+      <section class="panel offers-panel" id="pilotos" aria-labelledby="offers-heading"><div class="panel-head"><div class="panel-heading"><svg class="icon"><use href="#i-flask"></use></svg><h2 id="offers-heading">Ofertas iniciales (Pilotos)</h2></div><button class="small-link" type="button" data-dialog="offers">Ver todos <svg class="icon"><use href="#i-arrow"></use></svg></button></div><div class="offer-grid">
+        <button class="offer-card accountant" type="button" data-dialog="accountant" data-search="piloto contadores fuentes DIAN NotebookLM inventario demostración cinco preguntas revisión humana"><span class="offer-icon"><svg class="icon"><use href="#i-clipboard"></use></svg></span><span class="offer-content"><strong>Piloto 1 · Contadores</strong><small>Fuentes DIAN + NotebookLM</small><span class="offer-features"><span><svg class="icon"><use href="#i-folder"></use></svg>Inventario</span><span><svg class="icon"><use href="#i-play"></use></svg>Demostración</span><span><svg class="icon"><use href="#i-chat"></use></svg>Cinco preguntas</span><span><svg class="icon"><use href="#i-users"></use></svg>Revisión humana</span></span></span><span class="offer-status">Por validar</span><svg class="icon offer-chevron"><use href="#i-chevron"></use></svg></button>
+        <button class="offer-card odoo" type="button" data-dialog="odoo" data-search="piloto empresas Odoo diagnóstico proceso mapa opciones permisos criterios prueba"><span class="offer-icon"><svg class="icon"><use href="#i-gear"></use></svg></span><span class="offer-content"><strong>Piloto 2 · Empresas con Odoo</strong><small>Diagnóstico de un proceso</small><span class="offer-features"><span><svg class="icon"><use href="#i-map"></use></svg>Mapa</span><span><svg class="icon"><use href="#i-checklist"></use></svg>Opciones</span><span><svg class="icon"><use href="#i-lock"></use></svg>Permisos</span><span><svg class="icon"><use href="#i-check"></use></svg>Criterios de prueba</span></span></span><span class="offer-status">Planificado</span><svg class="icon offer-chevron"><use href="#i-chevron"></use></svg></button>
+      </div></section>
+      <p class="search-empty" id="search-empty" hidden>No hay coincidencias en el panel. Prueba con “Odoo”, “fuentes” o “marketing”.</p>
+    </main>
+  </div>
+
+  <dialog id="detail-dialog" aria-labelledby="dialog-title"><div class="dialog-head"><div><small id="dialog-eyebrow"></small><h2 id="dialog-title"></h2></div><button id="dialog-close" class="icon-button" type="button" aria-label="Cerrar detalles">×</button></div><div id="dialog-body" class="dialog-body"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

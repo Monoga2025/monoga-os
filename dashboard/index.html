@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Monoga OS — Panel administrativo</title>
+<style>
+  /* ===================================================================
+     MONOGA OS — Dashboard shell
+     Autocontenido: sin CDN, sin fuentes externas, sin red.
+     =================================================================== */
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --bg:            #f4f6fb;
+    --panel:         #ffffff;
+    --panel-2:       #fbfcfe;
+    --text:          #0f172a;
+    --muted:         #64748b;
+    --muted-2:       #94a3b8;
+    --border:        #e8ebf2;
+    --border-strong: #dbe1ec;
+    --blue:          #2563eb;
+    --blue-ink:      #1d4ed8;
+    --blue-soft:     #eef4ff;
+    --nav-active-bg: #eaf1fe;
+    --nav-active-ink:#1d4ed8;
+    --track:         #f1f4f9;
+    --shadow:        0 1px 2px rgba(15,23,42,.05), 0 10px 26px rgba(15,23,42,.055);
+    --shadow-sm:     0 1px 2px rgba(15,23,42,.06);
+    --radius:        16px;
+    --radius-sm:     12px;
+    --radius-xs:     9px;
+  }
+
+  body.dark {
+    --bg:            #0b1220;
+    --panel:         #121b30;
+    --panel-2:       #16203a;
+    --text:          #e8eefb;
+    --muted:         #93a4c3;
+    --muted-2:       #6f81a3;
+    --border:        #233152;
+    --border-strong: #2c3c60;
+    --blue:          #3b82f6;
+    --blue-ink:      #a8c6ff;
+    --blue-soft:     #17253f;
+    --nav-active-bg: #1b2a49;
+    --nav-active-ink:#c3d6ff;
+    --track:         #182238;
+    --shadow:        0 1px 2px rgba(0,0,0,.35), 0 12px 30px rgba(0,0,0,.4);
+    --shadow-sm:     0 1px 2px rgba(0,0,0,.35);
+  }
+
+  html, body { margin: 0; padding: 0; min-height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  button { font-family: inherit; }
+  a { color: inherit; }
+
+  .mono {
+    font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 12px;
+  }
+
+  /* ---------------- layout shell ---------------- */
+
+  .app { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 240px;
+    flex: 0 0 240px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px;
+    gap: 6px;
+    overflow-y: auto;
+    z-index: 40;
+  }
+
+  .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+  /* ---------------- brand ---------------- */
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 6px 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .brand-logo {
+    width: 34px; height: 34px;
+    flex: 0 0 34px;
+    border-radius: 10px;
+    background: linear-gradient(150deg, #3b82f6, #1d4ed8);
+    color: #fff;
+    display: grid; place-items: center;
+    box-shadow: 0 4px 10px rgba(37,99,235,.3);
+  }
+  .brand-text { min-width: 0; flex: 1; }
+  .brand-name { font-weight: 700; font-size: 14.5px; letter-spacing: -.2px; }
+  .brand-sub { font-size: 11.5px; color: var(--muted); }
+
+  .collapser {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  .collapser:hover { background: var(--track); color: var(--text); }
+
+  /* ---------------- nav ---------------- */
+
+  .nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .12s ease, color .12s ease;
+  }
+  .nav-item svg { flex: 0 0 18px; }
+  .nav-item:hover { background: var(--track); color: var(--text); }
+  .nav-item[aria-current="page"] {
+    background: var(--nav-active-bg);
+    color: var(--nav-active-ink);
+    font-weight: 600;
+  }
+  .nav-item:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  /* ---------------- sidebar promo ---------------- */
+
+  .promo {
+    margin-top: 12px;
+    background: var(--blue-soft);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  body:not(.dark) .promo { border: 1px solid #dbe7ff; }
+  body.dark .promo { border: 1px solid var(--border); }
+  .promo-icon {
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--blue);
+    color: #fff;
+    display: grid; place-items: center;
+  }
+  .promo-title { font-size: 13px; font-weight: 700; line-height: 1.35; }
+  .promo-line { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+  .promo-btn {
+    align-self: flex-start;
+    border: 0;
+    background: var(--blue);
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .promo-btn:hover { filter: brightness(1.06); }
+  .promo-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+  /* ---------------- topbar ---------------- */
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 22px;
+  }
+
+  .menu-btn {
+    display: none;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--text);
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    place-items: center;
+    flex: 0 0 auto;
+  }
+
+  .search {
+    position: relative;
+    flex: 1;
+    max-width: 540px;
+  }
+  .search svg {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-2);
+    pointer-events: none;
+  }
+  .search input {
+    width: 100%;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--track);
+    color: var(--text);
+    padding: 0 16px 0 38px;
+    font-size: 13px;
+    outline: none;
+  }
+  .search input::placeholder { color: var(--muted-2); }
+  .search input:focus { border-color: var(--blue); background: var(--panel); box-shadow: 0 0 0 3px rgba(37,99,235,.13); }
+
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+
+  .live-status {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 230px;
+  }
+  .live-status.is-error { color: #dc2626; }
+
+  .icon-btn {
+    position: relative;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--muted);
+    width: 38px; height: 38px;
+    border-radius: 999px;
+    display: grid; place-items: center;
+    cursor: pointer;
+    flex: 0 0 auto;
+  }
+  .icon-btn:hover { background: var(--track); color: var(--text); }
+  .icon-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .dot {
+    position: absolute; top: 8px; right: 9px;
+    width: 8px; height: 8px;
+    border-radius: 999px;
+    background: #ef4444;
+    border: 2px solid var(--panel);
+  }
+
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 8px 4px 4px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .user:hover { background: var(--track); }
+  .avatar {
+    width: 34px; height: 34px;
+    border-radius: 999px;
+    background: linear-gradient(150deg,#7c3aed,#2563eb);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 12.5px; font-weight: 700;
+    flex: 0 0 34px;
+  }
+  .user-meta { line-height: 1.2; text-align: left; }
+  .user-name { font-size: 13px; font-weight: 700; }
+  .user-role { font-size: 11px; color: var(--muted); }
+  .user .chev { color: var(--muted-2); }
+
+  /* ---------------- content ---------------- */
+
+  .content { padding: 24px 22px 48px; display: flex; flex-direction: column; gap: 20px; }
+
+  .row { display: grid; gap: 20px; }
+  .row-a { grid-template-columns: 2fr 1.2fr; align-items: stretch; }
+  .row-b { grid-template-columns: 2fr 1.2fr; align-items: start; }
+  .row-c { grid-template-columns: repeat(3, 1fr); align-items: start; }
+
+  /* ---------------- greeting + hero ---------------- */
+
+  .page-head { padding: 4px 2px 0; display: flex; flex-direction: column; justify-content: center; }
+  .hi { font-size: 13.5px; color: var(--muted); margin: 0 0 4px; font-weight: 600; }
+  .page-head h1 { font-size: 30px; line-height: 1.15; margin: 0; letter-spacing: -.6px; }
+  .page-sub { color: var(--muted); margin: 10px 0 0; font-size: 13.5px; max-width: 46ch; }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius);
+    min-height: 232px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: #10233f;
+    background:
+      radial-gradient(circle at 79% 20%, rgba(255,255,255,.95) 0 4.5%, rgba(255,255,255,.35) 5%, transparent 11%),
+      linear-gradient(180deg, #8fc3ff 0%, #aed7ff 34%, #dbeaff 55%, #f3f8ff 74%, #ffffff 100%);
+    box-shadow: var(--shadow);
+  }
+  .hero::before {
+    content: "";
+    position: absolute; left: -8%; right: -8%; bottom: 0; height: 66%;
+    background: linear-gradient(180deg, #cfe2ff 0%, #e8f1ff 100%);
+    clip-path: polygon(0% 100%, 0% 64%, 17% 30%, 33% 60%, 51% 14%, 69% 58%, 82% 36%, 100% 68%, 100% 100%);
+  }
+  .hero::after {
+    content: "";
+    position: absolute; left: -8%; right: -8%; bottom: 0; height: 52%;
+    background: linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
+    clip-path: polygon(0% 100%, 0% 78%, 22% 46%, 40% 74%, 58% 34%, 76% 72%, 90% 54%, 100% 80%, 100% 100%);
+    opacity: .96;
+  }
+  .hero-inner { position: relative; z-index: 2; }
+  .hero-caption {
+    font-size: 10px;
+    letter-spacing: .18em;
+    font-weight: 700;
+    color: #3f5b82;
+    margin: 0 0 10px;
+  }
+  .hero-quote {
+    font-size: 17px;
+    line-height: 1.35;
+    font-weight: 700;
+    letter-spacing: -.2px;
+    margin: 0;
+    max-width: 30ch;
+    color: #0b1c33;
+  }
+  .hero-underline {
+    display: block;
+    width: 54px; height: 3px;
+    border-radius: 999px;
+    background: var(--blue);
+    margin-top: 12px;
+  }
+
+  /* ---------------- cards ---------------- */
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+  }
+  .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .card-title { font-size: 15.5px; font-weight: 700; margin: 0; letter-spacing: -.2px; }
+  .card-sub { font-size: 12.5px; color: var(--muted); margin: 4px 0 0; }
+
+  .link-btn {
+    border: 0; background: transparent; padding: 0;
+    color: var(--blue-ink);
+    font-size: 12.5px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+  .link-btn:hover { text-decoration: underline; }
+  .link-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: 4px; }
+
+  .more-btn {
+    border: 0; background: transparent;
+    color: var(--muted); width: 26px; height: 24px;
+    border-radius: 7px; cursor: pointer; line-height: 1;
+    flex: 0 0 auto;
+  }
+  .more-btn:hover { background: var(--track); color: var(--text); }
+
+  /* ---------------- category grid ---------------- */
+
+  .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+  .cat-card {
+    text-align: left;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    border-radius: var(--radius-sm);
+    padding: 13px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    transition: border-color .12s ease, transform .12s ease, box-shadow .12s ease;
+  }
+  .cat-card:hover { border-color: var(--border-strong); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .cat-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .cat-card.is-active { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+  .cat-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .cat-ico { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; flex: 0 0 32px; }
+  .cat-name { font-size: 13.5px; font-weight: 700; }
+  .cat-desc { font-size: 11.5px; color: var(--muted); line-height: 1.4; min-height: 30px; }
+  .cat-foot { display: flex; align-items: center; gap: 8px; }
+  .pill {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 9px; border-radius: 999px;
+    background: rgba(100,116,139,.12);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ---------------- chips (filters) ---------------- */
+
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+  .chip-btn {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--muted);
+    font-size: 12px; font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .chip-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .chip-btn[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .chip-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  .filter-note { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+
+  /* ---------------- project list ---------------- */
+
+  .project-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .project {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+    padding: 13px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .project.is-archive { opacity: .62; }
+  .project-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .project-name { font-size: 14px; font-weight: 700; }
+  .project-path { color: var(--muted); margin-top: 3px; word-break: break-all; }
+  .project-paths { display: flex; flex-direction: column; gap: 2px; }
+  .junction-note { font-size: 11px; color: var(--muted-2); font-style: italic; }
+  .project-right { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+  .project-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .project-next { font-size: 12.5px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 8px; }
+  .project-next b { color: var(--text); font-weight: 600; }
+
+  .status-pill {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .git-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 999px;
+    background: rgba(100,116,139,.14); color: var(--muted);
+  }
+
+  /* ---------------- calendar ---------------- */
+
+  .cal-wrap { position: relative; }
+  .cal { display: grid; grid-template-columns: 54px repeat(5, 1fr); gap: 6px; }
+  .cal-head { font-size: 10.5px; font-weight: 700; color: var(--muted); text-align: center; padding-bottom: 2px; letter-spacing: .04em; }
+  .cal-time { font-size: 10.5px; color: var(--muted-2); padding-top: 6px; text-align: right; }
+  .cal-cell { min-height: 30px; border-radius: 7px; background: var(--track); border: 1px solid transparent; }
+  .cal-overlay {
+    position: absolute; inset: 26px 0 0 54px;
+    display: grid; place-items: center;
+    pointer-events: none;
+    color: var(--muted);
+    font-size: 12px; font-weight: 600;
+    background: color-mix(in srgb, var(--panel) 42%, transparent);
+    border-radius: 8px;
+  }
+  @supports not (background: color-mix(in srgb, red 50%, blue)) {
+    .cal-overlay { background: transparent; }
+  }
+
+  /* ---------------- clients ---------------- */
+
+  .client {
+    display: flex; align-items: center; gap: 11px;
+    padding: 10px 2px;
+    border-bottom: 1px solid var(--border);
+  }
+  .client:last-child { border-bottom: 0; }
+  .client-ava {
+    width: 36px; height: 36px; border-radius: 999px;
+    display: grid; place-items: center;
+    color: #fff; font-size: 12.5px; font-weight: 700;
+    flex: 0 0 36px;
+  }
+  .client-meta { min-width: 0; flex: 1; }
+  .client-name { font-size: 13.5px; font-weight: 700; }
+  .client-kind { font-size: 11.5px; color: var(--muted); text-transform: capitalize; }
+
+  /* ---------------- empty states ---------------- */
+
+  .empty {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px;
+    padding: 26px 16px;
+    text-align: center;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--panel-2);
+  }
+  .empty-ico {
+    width: 38px; height: 38px; border-radius: 999px;
+    background: var(--blue-soft); color: var(--blue-ink);
+    display: grid; place-items: center;
+  }
+  .empty-title { font-size: 13px; font-weight: 700; }
+  .empty-sub { font-size: 12px; color: var(--muted); max-width: 40ch; }
+
+  /* ---------------- findings ---------------- */
+
+  .finding {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .finding:last-child { border-bottom: 0; }
+  .sev {
+    display: inline-flex; align-items: center;
+    font-size: 10.5px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: .05em;
+    padding: 3px 9px; border-radius: 999px;
+    flex: 0 0 auto;
+  }
+  .finding-text { font-size: 12.8px; color: var(--text); line-height: 1.5; }
+
+  /* ---------------- carpetas tree ---------------- */
+
+  .tree-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .tree-item:last-child { border-bottom: 0; }
+  .tree-title { font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tree-children { list-style: none; margin: 9px 0 0; padding: 0 0 0 14px; border-left: 2px solid var(--border); }
+  .tree-children li { font-size: 12.5px; color: var(--muted); padding: 3px 0; display: flex; align-items: center; gap: 8px; }
+
+  /* ---------------- notes ---------------- */
+
+  .notes-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .plus-btn {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--muted);
+    width: 30px; height: 30px; border-radius: 9px;
+    cursor: pointer; font-size: 16px; line-height: 1;
+    display: grid; place-items: center;
+  }
+  .plus-btn:hover { background: var(--track); color: var(--text); }
+
+  /* ---------------- info / config ---------------- */
+
+  .kv { display: flex; flex-direction: column; gap: 10px; }
+  .kv-row { display: flex; justify-content: space-between; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .kv-row:last-child { border-bottom: 0; }
+  .kv-key { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .kv-val { font-size: 12.5px; text-align: right; word-break: break-word; }
+  .disclaimer {
+    margin-top: 12px;
+    background: var(--blue-soft);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 12.3px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ---------------- error ---------------- */
+
+  .error-box {
+    margin: 40px auto;
+    max-width: 620px;
+    background: var(--panel);
+    border: 1px solid #fecaca;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .error-box h2 { margin: 0 0 8px; font-size: 17px; color: #b91c1c; }
+  .error-box p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+  /* ---------------- control layer ---------------- */
+
+  .mode-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 11px 22px;
+    background: #fff7ed;
+    color: #92400e;
+    border-bottom: 1px solid #fed7aa;
+    font-size: 12.8px;
+    line-height: 1.45;
+  }
+  body.dark .mode-banner { background: #2a1f0c; color: #fcd9a5; border-bottom-color: #4a3a18; }
+  .mode-banner b { font-weight: 700; }
+  .mode-banner .banner-x {
+    margin-left: auto;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 1;
+    padding: 4px 7px;
+    border-radius: 8px;
+  }
+  .mode-banner .banner-x:hover { background: rgba(146,64,14,.12); }
+  .mode-banner .banner-x:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  .mode-banner[hidden] { display: none; }
+
+  .proj-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .act-btn {
+    border: 1px solid var(--border-strong);
+    background: var(--panel);
+    color: var(--text);
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .act-btn:hover { background: var(--blue-soft); border-color: var(--blue); color: var(--blue-ink); }
+  .act-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .act-btn[disabled] { opacity: .45; cursor: not-allowed; }
+  .act-btn[disabled]:hover { background: var(--panel); border-color: var(--border-strong); color: var(--text); }
+
+  /* El arranque es la accion primaria: se distingue del resto. */
+  .act-btn-run {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--blue-ink);
+  }
+  .act-btn-run:hover { background: var(--blue); border-color: var(--blue); color: var(--blue-ink); filter: brightness(1.08); }
+  .act-btn-run:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .act-btn-run[disabled] { background: var(--panel); border-color: var(--border-strong); color: var(--text); filter: none; }
+
+  .warn-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 999px;
+    background: rgba(220,38,38,.12); color: #dc2626;
+  }
+  .review-links { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+
+  .task-expander {
+    border-top: 1px dashed var(--border);
+    padding-top: 8px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .task-expander > summary {
+    list-style: none; cursor: pointer;
+    font-size: 12.5px; font-weight: 700; color: var(--blue-ink);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .task-expander > summary::-webkit-details-marker { display: none; }
+  .task-list { display: flex; flex-direction: column; gap: 6px; }
+  .task-row {
+    display: flex; align-items: center; gap: 9px;
+    padding: 6px 9px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xs);
+    background: var(--panel);
+  }
+  .task-row input[type="checkbox"] {
+    width: 15px; height: 15px; flex: 0 0 auto;
+    accent-color: var(--blue); cursor: pointer;
+  }
+  .task-text { flex: 1; min-width: 0; font-size: 12.8px; word-break: break-word; }
+  .task-row.is-done .task-text { text-decoration: line-through; color: var(--muted); }
+  .task-pill { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .task-del {
+    border: 0; background: transparent; color: var(--muted-2);
+    cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 7px;
+  }
+  .task-del:hover { background: rgba(220,38,38,.12); color: #dc2626; }
+  .task-del:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .task-input {
+    width: 100%; height: 34px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--border);
+    background: var(--track);
+    color: var(--text);
+    padding: 0 11px;
+    font-size: 12.5px;
+    outline: none;
+  }
+  .task-input:focus { border-color: var(--blue); background: var(--panel); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+  .task-empty { font-size: 12px; color: var(--muted); padding: 3px 1px; }
+
+  .proj-chip {
+    display: inline-flex; align-items: center;
+    font-size: 10.5px; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px;
+    background: var(--blue-soft); color: var(--blue-ink);
+    white-space: nowrap;
+  }
+
+  .toast-wrap {
+    position: fixed; right: 18px; bottom: 18px; z-index: 80;
+    display: flex; flex-direction: column; gap: 8px; align-items: flex-end;
+    pointer-events: none;
+  }
+  .toast {
+    pointer-events: auto;
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--blue);
+    border-radius: var(--radius-xs);
+    box-shadow: var(--shadow);
+    padding: 9px 14px;
+    font-size: 12.5px;
+    max-width: 320px;
+    animation: toast-in .15s ease;
+  }
+  .toast.is-error { border-left-color: #dc2626; }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------------- responsive ---------------- */
+
+  .backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,.45);
+    z-index: 35;
+  }
+
+  @media (max-width: 1100px) {
+    .row-a, .row-b { grid-template-columns: 1fr; }
+    .row-c { grid-template-columns: 1fr 1fr; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 900px) {
+    .sidebar {
+      position: fixed;
+      left: 0; top: 0;
+      transform: translateX(-100%);
+      transition: transform .2s ease;
+      height: 100vh;
+      box-shadow: 0 20px 50px rgba(15,23,42,.25);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .menu-btn { display: grid; }
+    .backdrop.show { display: block; }
+    .user-meta { display: none; }
+    .content { padding: 18px 16px 40px; }
+    .topbar { padding: 10px 14px; }
+  }
+
+  @media (max-width: 760px) {
+    .row-c { grid-template-columns: 1fr; }
+    .cat-grid { grid-template-columns: 1fr; }
+    .page-head h1 { font-size: 24px; }
+    .hero-quote { font-size: 15px; }
+  }
+  .focus-board { border: 1px solid #b9cdfd; background: linear-gradient(135deg, #f4f8ff, #fff 72%); margin-bottom: 18px; }
+  body.dark .focus-board { background: linear-gradient(135deg, #17243d, var(--panel) 76%); border-color: #344b76; }
+  .focus-intro { color: var(--muted); margin: 0 0 14px; }
+  .focus-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .focus-item { padding: 15px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+  .focus-item strong { display: block; font-size: 14px; margin-bottom: 5px; }
+  .focus-item p { margin: 0 0 11px; color: var(--muted); }
+  .focus-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .focus-links a, .focus-links button { border: 1px solid var(--border-strong); background: var(--bg); color: var(--text); border-radius: 8px; padding: 6px 9px; font-size: 12px; text-decoration: none; cursor: pointer; }
+  .focus-links a:hover, .focus-links button:hover { border-color: var(--blue); color: var(--blue); }
+  .project-purpose { color: var(--muted); margin: 9px 0 0; }
+  .project-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0 0 14px; }
+  .project-filter-row select { border: 1px solid var(--border-strong); color: var(--text); background: var(--panel); border-radius: 8px; padding: 7px 10px; }
+  @media (max-width: 760px) { .focus-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+  <div class="app">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19V7l8 6 8-6v12"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Monoga OS</span>
+          <span class="brand-sub" style="display:block">Centro de mando</span>
+        </span>
+        <button class="collapser" id="collapseBtn" type="button" aria-label="Contraer menú">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 6l-6 6 6 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="nav" id="nav" aria-label="Navegación principal"></nav>
+
+      <div class="promo">
+        <span class="promo-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="20" x2="14" y2="10"/>
+            <path d="M15 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>
+          </svg>
+        </span>
+        <span class="promo-title">Potencia tu flujo de trabajo con IA</span>
+        <span class="promo-line">Explora herramientas pensadas para acelerar tu producción.</span>
+        <button class="promo-btn" type="button" data-goto="ia_tools">Explorar IA Tools →</button>
+      </div>
+    </aside>
+
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- ==================== MAIN ==================== -->
+    <div class="main">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="4" y1="7" x2="20" y2="7"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <line x1="4" y1="17" x2="20" y2="17"/>
+          </svg>
+        </button>
+
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+          </svg>
+          <input id="searchInput" type="search" autocomplete="off"
+                 placeholder="Buscar proyectos, carpetas, tareas, clientes..." aria-label="Buscar" />
+        </div>
+
+        <div class="topbar-right">
+          <span class="live-status" id="liveStatusText" role="status" aria-live="polite">Modo lectura — sin actualización automática</span>
+
+          <button class="icon-btn" id="refreshBtn" type="button" aria-label="Actualizar ahora" title="Actualizar ahora">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6.1"/>
+              <path d="M21 4v5h-5"/>
+            </svg>
+          </button>
+
+          <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema">
+            <svg id="themeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+              <line x1="12" y1="2" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="22" y2="12"/>
+              <line x1="5" y1="5" x2="6.5" y2="6.5"/>
+              <line x1="17.5" y1="17.5" x2="19" y2="19"/>
+              <line x1="19" y1="5" x2="17.5" y2="6.5"/>
+              <line x1="6.5" y1="17.5" x2="5" y2="19"/>
+            </svg>
+          </button>
+
+          <button class="icon-btn" type="button" aria-label="Notificaciones">
+            <span class="dot" aria-hidden="true"></span>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9z"/>
+              <path d="M10 18a2 2 0 0 0 4 0"/>
+            </svg>
+          </button>
+
+          <button class="user" type="button" aria-label="Cuenta de Daniel Monoga">
+            <span class="avatar" aria-hidden="true">DM</span>
+            <span class="user-meta">
+              <span class="user-name" style="display:block">Daniel Monoga</span>
+              <span class="user-role" style="display:block">Arquitecto / Owner</span>
+            </span>
+            <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="mode-banner" id="modeBanner" role="status" hidden>
+        <span id="modeBannerText">Modo lectura. Para abrir proyectos y guardar tareas, ejecutá "Monoga OS.cmd".</span>
+        <button class="banner-x" id="bannerClose" type="button" aria-label="Cerrar aviso">&#215;</button>
+      </div>
+
+      <main class="content" id="content"></main>
+    </div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+  <!-- Fuente de verdad del registro. SIEMPRE antes del script del dashboard. -->
+  <script src="data/projects.js"></script>
+
+  <script>
+  (function () {
+    "use strict";
+
+    /* =========================================================
+       0. Guardas de integridad de datos
+       ========================================================= */
+
+    var content = document.getElementById("content");
+
+    function showFatal(title, detail) {
+      content.innerHTML =
+        '<div class="error-box">' +
+          '<h2>' + title + '</h2>' +
+          '<p>' + detail + '</p>' +
+        '</div>';
+    }
+
+    var DATA = window.MONOGA_OS_DATA;
+
+    if (!DATA || typeof DATA !== "object" || !Array.isArray(DATA.projects)) {
+      showFatal(
+        "No se pudo cargar el registro de Monoga OS",
+        "El archivo <span class=\"mono\">data/projects.js</span> no está disponible o no define " +
+        "<span class=\"mono\">window.MONOGA_OS_DATA</span> con un array <span class=\"mono\">projects</span> válido. " +
+        "Verifica que el archivo exista junto a este dashboard y vuelve a abrir la página."
+      );
+      return;
+    }
+
+    var PROJECTS   = DATA.projects || [];
+    var CATEGORIES = Array.isArray(DATA.categories) ? DATA.categories : [];
+    var CLIENTS    = Array.isArray(DATA.clients) ? DATA.clients : [];
+    var TASKS      = Array.isArray(DATA.tasks) ? DATA.tasks : [];
+    var NOTES      = Array.isArray(DATA.notes) ? DATA.notes : [];
+    var FINDINGS   = Array.isArray(DATA.findings) ? DATA.findings : [];
+    var STATUSES   = DATA.statuses && typeof DATA.statuses === "object" ? DATA.statuses : {};
+    var META       = DATA.meta && typeof DATA.meta === "object" ? DATA.meta : {};
+
+    /* =========================================================
+       1. Utilidades
+       ========================================================= */
+
+    function esc(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    var COLORS = {
+      blue: "#2563eb", violet: "#7c3aed", green: "#16a34a", amber: "#d97706",
+      rose: "#e11d48", teal: "#0d9488", indigo: "#4f46e5", red: "#dc2626",
+      orange: "#ea580c", slate: "#64748b", cyan: "#0891b2"
+    };
+
+    function colorOf(key) { return COLORS[key] || COLORS.slate; }
+
+    // Tamano: X MB si < 1024, si no X.X GB.
+    function formatSize(sizeMB) {
+      if (sizeMB == null || (typeof sizeMB === "string" && sizeMB.trim() === "")) return "—";
+      var mb = Number(sizeMB);
+      if (!isFinite(mb) || mb < 0) return "—";
+      if (mb < 1024) {
+        return (Math.round(mb * 10) / 10 === Math.round(mb) ? String(Math.round(mb)) : mb.toFixed(1)) + " MB";
+      }
+      return (mb / 1024).toFixed(1) + " GB";
+    }
+
+    function statusMeta(key) {
+      var s = STATUSES[key];
+      if (s && typeof s === "object") {
+        return { label: s.label || String(key), color: colorOf(s.color || "slate") };
+      }
+      // Estado desconocido: valor crudo + color neutro.
+      return { label: key == null ? "—" : String(key), color: COLORS.slate };
+    }
+
+    function svg(name, size) {
+      var s = size || 18;
+      var inner = ICONS[name] || ICONS.dot;
+      return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 24 24" fill="none" ' +
+             'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+             'aria-hidden="true">' + inner + "</svg>";
+    }
+
+    // Un elemento de bucket no es un proyecto real: no cuenta ni se lista.
+    function isBucketKind(p) {
+      return !!p && (p.kind === "draft" || p.kind === "orphan");
+    }
+
+    function realProjectCount() {
+      var n = 0;
+      for (var i = 0; i < PROJECTS.length; i++) {
+        if (!isBucketKind(PROJECTS[i])) n++;
+      }
+      return n;
+    }
+
+    // Conteo de categorias calculado SIEMPRE en runtime. Nunca hardcodeado.
+    // Borradores y huerfanos quedan fuera del conteo.
+    function countInCategory(key) {
+      var n = 0;
+      for (var i = 0; i < PROJECTS.length; i++) {
+        if (isBucketKind(PROJECTS[i])) continue;
+        var cats = PROJECTS[i].categories;
+        if (Array.isArray(cats) && cats.indexOf(key) !== -1) n++;
+      }
+      return n;
+    }
+
+    function categoryByKey(key) {
+      for (var i = 0; i < CATEGORIES.length; i++) {
+        if (CATEGORIES[i].key === key) return CATEGORIES[i];
+      }
+      return null;
+    }
+
+    function statusPill(key) {
+      var m = statusMeta(key);
+      return '<span class="status-pill" style="background:' + m.color +
+             '1f;color:' + m.color + '">' + esc(m.label) + "</span>";
+    }
+
+    function catChips(keys) {
+      if (!Array.isArray(keys) || !keys.length) {
+        return '<span class="pill">Sin categoría</span>';
+      }
+      return keys.map(function (k) {
+        var c = categoryByKey(k);
+        var label = c ? c.label : k;
+        var col = colorOf(c ? c.color : "slate");
+        return '<span class="pill" style="background:' + col + '1f;color:' + col + '">' + esc(label) + "</span>";
+      }).join("");
+    }
+
+    /* =========================================================
+       2. Iconos (SVG inline, dibujados a mano)
+       ========================================================= */
+
+    var ICONS = {
+      home:      '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+      folder:    '<path d="M3 6h6l2 2h10v10H3z"/>',
+      folderOpen:'<path d="M3 7h6l2 2h10v3H3z"/><path d="M3 12l2 7h14l2-7z"/>',
+      check:     '<rect x="3" y="4" width="17" height="17" rx="3"/><path d="M8 12l3 3 5-7"/>',
+      calendar:  '<rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/>',
+      users:     '<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5"/><path d="M16 5a3 3 0 0 1 0 6"/><path d="M18.5 20c0-2.4-.5-4-2-5"/>',
+      bolt:      '<path d="M13 2L4 14h6l-1 8 9-12h-6z"/>',
+      wand:      '<line x1="4" y1="20" x2="14" y2="10"/><path d="M15 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>',
+      play:      '<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M11 9l4 3-4 3z"/>',
+      file:      '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/>',
+      gear:      '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',
+      window:    '<rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/>',
+      bot:       '<rect x="4" y="8" width="16" height="12" rx="3"/><line x1="12" y1="4" x2="12" y2="8"/><circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/>',
+      chart:     '<line x1="5" y1="20" x2="5" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="19" y1="20" x2="19" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>',
+      globe:     '<circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 0 0-18z"/>',
+      chip:      '<rect x="7" y="7" width="10" height="10" rx="2"/><line x1="10" y1="2" x2="10" y2="5"/><line x1="14" y1="2" x2="14" y2="5"/><line x1="10" y1="19" x2="10" y2="22"/><line x1="14" y1="19" x2="14" y2="22"/><line x1="2" y1="10" x2="5" y2="10"/><line x1="2" y1="14" x2="5" y2="14"/><line x1="19" y1="10" x2="22" y2="10"/><line x1="19" y1="14" x2="22" y2="14"/>',
+      tag:       '<path d="M3 12L12 3h8v8l-9 9z"/><circle cx="16" cy="7" r="1.3"/>',
+      wallet:    '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16" cy="14" r="1.2"/>',
+      user:      '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+      git:       '<circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="9" r="2.4"/><path d="M6 8.4v7.2"/><path d="M18 11.4c0 4-4 4-8 4.5"/>',
+      sun:       '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/>',
+      moon:      '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+      warning:   '<path d="M12 3l9 16H3z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r=".6"/>',
+      dot:       '<circle cx="12" cy="12" r="3"/>',
+      box:       '<path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M4 7l8 4 8-4"/><line x1="12" y1="11" x2="12" y2="21"/>'
+    };
+
+    /* =========================================================
+       3. Estado de la UI
+       ========================================================= */
+
+    var state = {
+      view: "inicio",
+      filter: null,     // clave de categoria activa (null = todas)
+      status: null,
+      search: "",
+      theme: "light",
+      collapsed: false,
+      openTasks: {}     // ids de proyecto con el panel de tareas abierto
+    };
+
+    // Modo de la app: "readonly" (file:// o servidor ausente) | "control" (servidor local).
+    var API = {
+      mode: "readonly",
+      version: null,
+      rootPath: ""
+    };
+
+
+    try {
+      var savedTheme = window.localStorage && window.localStorage.getItem("monoga-theme");
+      if (savedTheme === "dark" || savedTheme === "light") state.theme = savedTheme;
+    } catch (e) { /* file:// puede bloquear localStorage: se ignora */ }
+
+    /* =========================================================
+       4. Navegacion lateral
+       ========================================================= */
+
+    var NAV = [
+      { view: "inicio",           label: "Inicio",                  icon: "home" },
+      { view: "proyectos",        label: "Proyectos",               icon: "folder" },
+      { view: "carpetas",         label: "Carpetas",                icon: "folderOpen" },
+      { view: "pendientes",       label: "Mis pendientes",          icon: "check" },
+      { view: "horario",          label: "Horario",                 icon: "calendar" },
+      { view: "clientes",         label: "Clientes",                icon: "users" },
+      { view: "automatizaciones", label: "Automatizaciones",        icon: "bolt", cat: "automatizaciones" },
+      { view: "ia_tools",         label: "IA Tools",                icon: "wand", cat: "ia_tools" },
+      { view: "youtube",          label: "YouTube Marca Personal",  icon: "play", cat: "youtube_personal" },
+      { view: "documentacion",    label: "Documentación",           icon: "file" },
+      { view: "borradores",       label: "Borradores y otros",      icon: "box" },
+      { view: "configuracion",    label: "Configuración",           icon: "gear" }
+    ];
+
+    function renderNav() {
+      var nav = document.getElementById("nav");
+      nav.innerHTML = NAV.map(function (item) {
+        var active = state.view === item.view;
+        return '<button class="nav-item" type="button" data-view="' + item.view + '" ' +
+               (active ? 'aria-current="page"' : "") + ">" +
+               svg(item.icon, 18) + "<span>" + esc(item.label) + "</span></button>";
+      }).join("");
+    }
+
+    /* =========================================================
+       5. Bloques reutilizables
+       ========================================================= */
+
+    function card(opts) {
+      return '<section class="card">' +
+        '<div class="card-head">' +
+          "<div>" +
+            '<h2 class="card-title">' + esc(opts.title) + "</h2>" +
+            (opts.sub ? '<p class="card-sub">' + esc(opts.sub) + "</p>" : "") +
+          "</div>" +
+          (opts.action || "") +
+        "</div>" +
+        (opts.body || "") +
+      "</section>";
+    }
+
+    function emptyState(icon, title, sub) {
+      return '<div class="empty">' +
+        '<span class="empty-ico">' + svg(icon, 18) + "</span>" +
+        '<span class="empty-title">' + esc(title) + "</span>" +
+        '<span class="empty-sub">' + esc(sub) + "</span>" +
+      "</div>";
+    }
+
+    /* =========================================================
+       7. Lista de proyectos
+       ========================================================= */
+
+    function projectMatchesSearch(p) {
+      if (!state.search) return true;
+      var q = state.search;
+      var haystack = [
+        p.name, p.path, p.aliasPath, p.nextAction, p.notes, p.status, p.kind,
+        (Array.isArray(p.stack) ? p.stack.join(" ") : ""),
+        (Array.isArray(p.categories) ? p.categories.map(function (k) {
+          var c = categoryByKey(k); return c ? c.label : k;
+        }).join(" ") : "")
+      ].join(" ").toLowerCase();
+      return haystack.indexOf(q) !== -1;
+    }
+
+    function filteredProjects() {
+      return PROJECTS.filter(function (p) {
+        if (isBucketKind(p)) return false;
+        if (state.status && p.status !== state.status) return false;
+        if (state.filter && !(Array.isArray(p.categories) && p.categories.indexOf(state.filter) !== -1)) {
+          return false;
+        }
+        return projectMatchesSearch(p);
+      });
+    }
+
+    function projectItem(p) {
+      var isArchive = p.kind === "archive";
+      var hasAlias = !!p.aliasPath;
+      var pathsHtml = hasAlias
+        ? '<div class="project-paths">' +
+            '<div class="mono project-path">' + esc(p.path) + "</div>" +
+            '<div class="mono project-path">' + esc(p.aliasPath) + "</div>" +
+            '<div class="junction-note">Junction: dos nombres, una sola carpeta.</div>' +
+          "</div>"
+        : '<div class="mono project-path">' + esc(p.path) + "</div>";
+
+      return '<article id="project-' + esc(p.id) + '" class="project' + (isArchive ? " is-archive" : "") + '">' +
+        '<div class="project-top">' +
+          "<div>" +
+            '<div class="project-name">' + esc(p.name) + "</div>" +
+            pathsHtml +
+          "</div>" +
+          '<div class="project-right">' +
+            (p.exists === false
+              ? '<span class="warn-chip">' + svg("warning", 12) + " No encontrado en disco</span>"
+              : "") +
+            statusPill(p.status) +
+            (p.hasGit ? '<span class="git-badge">' + svg("git", 13) + " git</span>" : "") +
+          "</div>" +
+        "</div>" +
+        '<div class="project-meta">' +
+          catChips(p.categories) +
+          '<span class="pill">' + esc(formatSize(p.sizeMB)) + "</span>" +
+        "</div>" +
+        (p.notes ? '<p class="project-purpose"><b>Contexto:</b> ' + esc(p.notes) + "</p>" : "") +
+        projectActionsHTML(p) +
+        (p.nextAction ? '<div class="project-next"><b>Próximo paso:</b> ' + esc(p.nextAction) + "</div>" : "") +
+        projectTasksHTML(p) +
+      "</article>";
+    }
+
+    function categoryFilterChips() {
+      var chips = ['<button class="chip-btn" type="button" data-cat="" aria-pressed="' +
+        (state.filter === null ? "true" : "false") + '">Todas</button>'];
+
+      chips = chips.concat(CATEGORIES.map(function (c) {
+        var pressed = state.filter === c.key;
+        return '<button class="chip-btn" type="button" data-cat="' + esc(c.key) + '" aria-pressed="' +
+               (pressed ? "true" : "false") + '">' + esc(c.label) +
+               " (" + countInCategory(c.key) + ")</button>";
+      }));
+
+      return '<div class="chips">' + chips.join("") + "</div>";
+    }
+
+    function activeFilterNote() {
+      if (!state.filter) return "";
+      var c = categoryByKey(state.filter);
+      return '<p class="filter-note">Filtro activo: <b>' + esc(c ? c.label : state.filter) +
+             "</b>. " + countInCategory(state.filter) + " proyectos.</p>";
+    }
+
+    function projectsSection(opts) {
+      opts = opts || {};
+      var list = filteredProjects();
+      var statusOptions = ['<option value="">Todos los estados</option>'];
+      Object.keys(STATUSES).forEach(function (key) {
+        statusOptions.push('<option value="' + esc(key) + '"' + (state.status === key ? ' selected' : '') + '>' + esc(STATUSES[key].label || key) + '</option>');
+      });
+      var body = categoryFilterChips() + activeFilterNote() +
+        '<div class="project-filter-row"><label for="projectStatus">Estado observado</label>' +
+        '<select id="projectStatus" aria-label="Filtrar proyectos por estado">' + statusOptions.join("") + '</select>' +
+        '<span class="filter-note">' + list.length + ' resultados · inventario con fecha, no actividad en vivo</span></div>';
+
+      if (!list.length) {
+        body += emptyState(
+          "folder",
+          "Sin proyectos para este filtro",
+          state.search
+            ? "Ningún proyecto coincide con la búsqueda actual."
+            : "No hay proyectos registrados en esta categoría."
+        );
+      } else {
+        body += '<div class="project-list">' + list.map(projectItem).join("") + "</div>";
+      }
+
+      var id = opts.id === undefined ? "projects-section" : opts.id;
+      return '<section class="card"' + (id ? ' id="' + esc(id) + '"' : "") + ">" +
+        '<div class="card-head">' +
+          "<div>" +
+            '<h2 class="card-title">' + esc(opts.title || "Todos los proyectos") + "</h2>" +
+            '<p class="card-sub">' + esc(opts.sub || "Registro completo, con rutas reales y estado observado.") + "</p>" +
+          "</div>" +
+          (opts.action || '<span class="pill">' + realProjectCount() + " en total</span>") +
+        "</div>" +
+        body +
+      "</section>";
+    }
+
+    /* =========================================================
+       8. Secciones especificas
+       ========================================================= */
+
+    function heroHTML() {
+      return '<div class="hero">' +
+        '<div class="hero-inner">' +
+          '<p class="hero-caption">DISCIPLINA + IA + CREACIÓN = LIBERTAD</p>' +
+          '<p class="hero-quote">“Construye hoy la versión de ti<br>que quiere el futuro.”</p>' +
+          '<span class="hero-underline" aria-hidden="true"></span>' +
+        "</div>" +
+      "</div>";
+    }
+
+    function pageHeadHTML() {
+      return '<div class="page-head">' +
+        '<p class="hi">¡Hola, Daniel! 👋</p>' +
+        "<h1>Panel administrativo</h1>" +
+        '<p class="page-sub">Organiza tus proyectos, tareas y recursos en un solo lugar.</p>' +
+      "</div>";
+    }
+
+    // Estas son sugerencias editoriales, no tareas guardadas ni trabajo aprobado.
+    function guideHref(rel) {
+      return API.mode === "control"
+        ? "/api/doc?path=" + encodeURIComponent(rel)
+        : "../" + rel.split("/").map(encodeURIComponent).join("/");
+    }
+
+    function focusBoardHTML() {
+      var steps = [
+        { project: "agentes_ia_workspace", title: "Validar el problema de los contadores",
+          detail: "Revisar el guion de NotebookLM y contrastar las hipótesis con entrevistas antes de ofrecer un piloto.",
+          doc: "agentes/marketing/borradores/contadores-notebooklm.md", label: "Leer guion" },
+        { project: "agentes_ia_workspace", title: "Acotar el diagnóstico Odoo",
+          detail: "Revisar el proceso, versión, edición y permisos reales antes de estimar integración o precio.",
+          doc: "agentes/marketing/borradores/odoo-procesos.md", label: "Leer ejemplo" }
+      ];
+      return '<section class="card focus-board" aria-labelledby="focus-title">' +
+        '<div class="card-head"><div><h2 class="card-title" id="focus-title">En qué trabajar ahora</h2>' +
+        '<p class="card-sub">Cuatro pasos propuestos a partir de archivos locales; elige uno y comprueba su vigencia.</p></div></div>' +
+        '<p class="focus-intro">Prioridad actual: integrar IA en profesiones y empresas. El video apoya el marketing propio; la experiencia con Odoo fue informada por Daniel.</p>' +
+        '<div class="focus-grid">' + steps.map(function (step, i) {
+          return '<article class="focus-item"><strong>' + (i + 1) + '. ' + esc(step.title) + '</strong>' +
+            '<p>' + esc(step.detail) + '</p><div class="focus-links">' +
+            '<button type="button" data-focus="' + esc(step.project) + '">Ver proyecto</button>' +
+            (step.doc ? '<a href="' + esc(guideHref(step.doc)) + '">' + esc(step.label) + '</a>' : '') +
+            '</div></article>';
+        }).join('') + '</div></section>';
+    }
+
+    function sortedTasks() {
+      var order = { pendiente: 0, en_progreso: 1, hecha: 2 };
+      return TASKS.slice().sort(function (a, b) {
+        var oa = order[a.status] == null ? 1 : order[a.status];
+        var ob = order[b.status] == null ? 1 : order[b.status];
+        if (oa !== ob) return oa - ob;
+        return (a.createdAt || 0) - (b.createdAt || 0);
+      });
+    }
+
+    function pendientesHTML() {
+      var list = sortedTasks();
+      var body;
+      if (list.length) {
+        body = '<div class="task-list">' + list.map(function (t) {
+          return taskRowHTML(t, { showProject: true });
+        }).join("") + "</div>";
+      } else {
+        body = emptyState("check", "Sin pendientes registrados todavía",
+          API.mode === "control"
+            ? "Agregá tareas desde cada proyecto en la lista de Proyectos."
+            : "El registro aún no tiene tareas cargadas.");
+      }
+      return card({
+        title: "Mis pendientes",
+        sub: "Tareas y próximos pasos para mantener el enfoque.",
+        action: '<button class="link-btn" type="button" data-view="pendientes">Ver todos →</button>',
+        body: body
+      });
+    }
+
+    function clientesHTML() {
+      return card({
+        title: "Clientes",
+        sub: "Gestiona tus clientes y proyectos activos.",
+        body: CLIENTS.length
+          ? CLIENTS.map(function (c) {
+              var name = c.name || "Cliente";
+              var initials = name.split(/\s+/).slice(0, 2).map(function (w) { return w.charAt(0); }).join("").toUpperCase();
+              var m = statusMeta(c.status);
+              var col = colorOf(c.kind === "propio" ? "violet" : "blue");
+              return '<div class="client">' +
+                '<span class="client-ava" style="background:' + col + '">' + esc(initials) + "</span>" +
+                '<span class="client-meta">' +
+                  '<span class="client-name" style="display:block">' + esc(name) + "</span>" +
+                  '<span class="client-kind">' + esc(c.kind || "cliente") + "</span>" +
+                "</span>" +
+                '<span class="status-pill" style="background:' + m.color + '1f;color:' + m.color + '">' +
+                  esc(m.label) + "</span>" +
+              "</div>";
+            }).join("")
+          : emptyState("users", "Sin clientes registrados", "El registro no tiene clientes cargados.")
+      });
+    }
+
+    function notasHTML() {
+      return card({
+        title: "Notas rápidas",
+        sub: "Ideas, recordatorios y cosas por hacer.",
+        action: '<button class="plus-btn" type="button" aria-label="Agregar nota">+</button>',
+        body: NOTES.length
+          ? '<div class="project-list">' + NOTES.map(function (n) {
+              return '<div class="project"><div class="project-next">' + esc(n.text || n.title || "") + "</div></div>";
+            }).join("") + "</div>"
+          : emptyState("file", "Sin notas todavía", "El registro no tiene notas cargadas.")
+      });
+    }
+
+    function horarioHTML() {
+      var days = ["Lun", "Mar", "Mié", "Jue", "Vie"];
+      var hours = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+      var grid = '<div class="cal">';
+      grid += '<div class="cal-head cal-head-corner"></div>';
+      days.forEach(function (d) { grid += '<div class="cal-head">' + d + "</div>"; });
+      hours.forEach(function (h) {
+        grid += '<div class="cal-time">' + h + "</div>";
+        days.forEach(function () { grid += '<div class="cal-cell"></div>'; });
+      });
+      grid += "</div>";
+
+      return card({
+        title: "Horario de la semana",
+        sub: "Tu planificación y bloques de trabajo.",
+        body: '<div class="cal-wrap">' + grid +
+              '<div class="cal-overlay">Sin bloques cargados</div>' +
+              "</div>"
+      });
+    }
+
+    function findingsList() {
+      if (!FINDINGS.length) {
+        return emptyState("check", "Sin hallazgos", "La auditoría no registró hallazgos.");
+      }
+      var sevColor = { alta: "#dc2626", media: "#d97706", baja: "#64748b" };
+      return FINDINGS.map(function (f) {
+        var col = sevColor[f.severity] || COLORS.slate;
+        return '<div class="finding">' +
+          '<span class="sev" style="background:' + col + '1f;color:' + col + '">' + esc(f.severity || "—") + "</span>" +
+          '<span class="finding-text">' + esc(f.text) + "</span>" +
+        "</div>";
+      }).join("");
+    }
+
+    function saludHTML() {
+      return card({
+        title: "Salud del workspace",
+        sub: "Hallazgos de la auditoría estática del registro.",
+        body: findingsList()
+      });
+    }
+
+    function carpetasView() {
+      var containers = PROJECTS.filter(function (p) { return p.kind === "container"; });
+      var body;
+      if (!containers.length) {
+        body = emptyState("folderOpen", "Sin contenedores", "No hay proyectos de tipo contenedor en el registro.");
+      } else {
+        body = containers.map(function (p) {
+          var children = Array.isArray(p.children) ? p.children : [];
+          return '<div class="tree-item">' +
+            '<div class="tree-title">' + svg("folderOpen", 16) + esc(p.name) +
+              '<span class="mono" style="color:var(--muted);font-weight:500">' + esc(p.path) + "</span>" +
+            "</div>" +
+            (children.length
+              ? '<ul class="tree-children">' + children.map(function (ch) {
+                  return "<li>" + svg("folder", 13) + esc(ch.name) +
+                    (ch.hasGit ? '<span class="git-badge">' + svg("git", 11) + " git</span>" : "") +
+                  "</li>";
+                }).join("") + "</ul>"
+              : "") +
+          "</div>";
+        }).join("");
+      }
+      return '<section class="card">' +
+        '<div class="card-head"><div>' +
+          '<h2 class="card-title">Carpetas</h2>' +
+          '<p class="card-sub">Contenedores del registro con sus hijos observados.</p>' +
+        "</div></div>" + body +
+      "</section>";
+    }
+
+    function clientesView() {
+      return '<div class="row row-a">' + clientesHTML() + card({
+        title: "Estado de la relación",
+        sub: "Los clientes siguen marcados como sin verificar en el registro.",
+        body: '<div class="kv">' + CLIENTS.map(function (c) {
+          var m = statusMeta(c.status);
+          return '<div class="kv-row"><span class="kv-key">' + esc(c.name) + "</span>" +
+            '<span class="kv-val"><span class="status-pill" style="background:' + m.color +
+            '1f;color:' + m.color + '">' + esc(m.label) + "</span></span></div>";
+        }).join("") + "</div>"
+      }) + "</div>";
+    }
+
+    function documentacionView() {
+      return card({
+        title: "Guías para orientarse",
+        sub: "Entradas locales; los documentos describen trabajo y decisiones, no resultados comerciales.",
+        body: '<div class="focus-links">' +
+          '<a href="' + esc(guideHref("docs/PROJECT_NAVIGATION.md")) + '">Mapa de proyectos</a>' +
+          '<a href="' + esc(guideHref("agentes/README.md")) + '">Espacio de IA</a>' +
+          '<a href="' + esc(guideHref("docs/COMPANY_OPERATIONS.md")) + '">Operaciones</a>' +
+          '</div>'
+      }) + '<div class="row row-b">' +
+        card({
+          title: "Hallazgos de la auditoría",
+          sub: "Observaciones que no son proyectos pero importan.",
+          body: findingsList()
+        }) +
+        card({
+          title: "Fuente del registro",
+          sub: "Ruta del archivo que alimenta este dashboard.",
+          body: '<div class="kv">' +
+            '<div class="kv-row"><span class="kv-key">Archivo</span><span class="kv-val mono">' + esc(META.registryFile || "—") + "</span></div>" +
+            '<div class="kv-row"><span class="kv-key">Generado</span><span class="kv-val">' + esc(META.generatedAt || "—") + "</span></div>" +
+            '<div class="kv-row"><span class="kv-key">Fuente</span><span class="kv-val">' + esc(META.source || "—") + "</span></div>" +
+          "</div>"
+        }) +
+      "</div>";
+    }
+
+    function configuracionView() {
+      return '<section class="card">' +
+        '<div class="card-head"><div>' +
+          '<h2 class="card-title">Configuración</h2>' +
+          '<p class="card-sub">Metadatos del registro Monoga OS.</p>' +
+        "</div></div>" +
+        '<div class="kv">' +
+          '<div class="kv-row"><span class="kv-key">Nombre</span><span class="kv-val">' + esc(META.name || "—") + "</span></div>" +
+          '<div class="kv-row"><span class="kv-key">Owner</span><span class="kv-val">' + esc(META.owner || "—") + "</span></div>" +
+          '<div class="kv-row"><span class="kv-key">Generado</span><span class="kv-val">' + esc(META.generatedAt || "—") + "</span></div>" +
+          '<div class="kv-row"><span class="kv-key">Archivo del registro</span><span class="kv-val mono">' + esc(META.registryFile || "—") + "</span></div>" +
+        "</div>" +
+        '<div class="disclaimer">' + esc(META.disclaimer || "Sin nota de procedencia registrada.") + "</div>" +
+      "</section>";
+    }
+
+    /* =========================================================
+       8b. Bucket "Borradores y otros"
+       ========================================================= */
+
+    function bucketProjects() {
+      return PROJECTS.filter(isBucketKind);
+    }
+
+    function bucketItem(p) {
+      var kindLabel = p.kind === "draft" ? "Borrador" : "Huérfano";
+      return '<article class="project is-archive">' +
+        '<div class="project-top">' +
+          "<div>" +
+            '<div class="project-name">' + esc(p.name) + "</div>" +
+            '<div class="mono project-path">' + esc(p.path) + "</div>" +
+          "</div>" +
+          '<div class="project-right">' +
+            statusPill(p.status) +
+            '<span class="pill">' + esc(kindLabel) + "</span>" +
+          "</div>" +
+        "</div>" +
+        '<div class="project-meta">' +
+          catChips(p.categories) +
+        "</div>" +
+        (p.notes ? '<div class="project-next"><b>Nota:</b> ' + esc(p.notes) + "</div>" : "") +
+        (p.nextAction ? '<div class="project-next"><b>Próximo paso:</b> ' + esc(p.nextAction) + "</div>" : "") +
+      "</article>";
+    }
+
+    function viewBorradores() {
+      var list = bucketProjects();
+      var body = '<p class="filter-note">Cosas fuera de alcance, muertas o reemplazadas. No cuentan como proyectos.</p>';
+      if (!list.length) {
+        body += emptyState("box", "Sin borradores ni huérfanos",
+          "El registro no tiene elementos fuera de alcance.");
+      } else {
+        body += '<div class="project-list">' + list.map(bucketItem).join("") + "</div>";
+      }
+      return '<section class="card">' +
+        '<div class="card-head"><div>' +
+          '<h2 class="card-title">Borradores y otros (' + list.length + ")</h2>" +
+          '<p class="card-sub">Elementos que no cuentan como proyectos reales. Se conservan para revisión y son reversibles.</p>' +
+        "</div></div>" + body +
+      "</section>";
+    }
+
+    /* =========================================================
+       9. Vistas
+       ========================================================= */
+
+    function viewHome() {
+      return '' +
+        '<div class="row row-a">' + pageHeadHTML() + heroHTML() + "</div>" +
+
+        focusBoardHTML() +
+
+        '<div class="row row-b">' +
+          projectsSection({
+            title: "Proyectos",
+            sub: "Tus proyectos reales. Los borradores y huérfanos no aparecen acá.",
+            action: '<button class="link-btn" type="button" data-view="proyectos">Ver todos →</button>'
+          }) +
+          pendientesHTML() +
+        "</div>" +
+
+        '<div class="row row-c">' +
+          horarioHTML() +
+          clientesHTML() +
+          notasHTML() +
+        "</div>" +
+
+        '<div class="row row-c" style="grid-template-columns:1fr">' + saludHTML() + "</div>";
+    }
+
+    function viewProyectos() {
+      return projectsSection({
+        title: "Proyectos",
+        sub: "Registro completo, con rutas reales y estado observado."
+      });
+    }
+
+    function viewPendientes() {
+      if (API.mode === "control") {
+        return '<div class="row row-b">' + pendientesHTML() +
+          card({
+            title: "Estado de tareas",
+            sub: "Resumen calculado en runtime sobre las tareas guardadas en disco.",
+            body: '<div class="kv">' + taskCountsHTML() + "</div>"
+          }) +
+        "</div>";
+      }
+      return '<div class="row row-b">' + pendientesHTML() +
+        card({
+          title: "Origen de las tareas",
+          sub: "El registro no contiene tareas. Este panel permanece vacío a propósito.",
+          body: emptyState("check", "Sin datos de tareas",
+            "No se inventan filas: si una tarea no está en el registro, no existe para el sistema.")
+        }) +
+      "</div>";
+    }
+
+    function taskCountsHTML() {
+      var counts = { pendiente: 0, en_progreso: 0, hecha: 0 };
+      TASKS.forEach(function (t) {
+        if (counts[t.status] != null) counts[t.status]++;
+      });
+      function row(label, n, color) {
+        return '<div class="kv-row"><span class="kv-key">' + esc(label) + "</span>" +
+          '<span class="kv-val"><span class="status-pill" style="background:' + color +
+          '1f;color:' + color + '">' + n + "</span></span></div>";
+      }
+      return row("Pendientes", counts.pendiente, "#2563eb") +
+             row("En progreso", counts.en_progreso, "#d97706") +
+             row("Hechas", counts.hecha, "#16a34a") +
+             row("Total", TASKS.length, "#64748b");
+    }
+
+    function viewHorario() {
+      return '<div class="row row-b">' + horarioHTML() +
+        card({
+          title: "Sin bloques registrados",
+          sub: "La cuadrícula se muestra vacía porque no hay planificación cargada.",
+          body: emptyState("calendar", "Sin bloques cargados",
+            "No hay datos de horario en el registro para dibujar.")
+        }) +
+      "</div>";
+    }
+
+    function viewCategoria(catKey) {
+      var c = categoryByKey(catKey);
+      return projectsSection({
+        title: c ? c.label : "Proyectos",
+        sub: "Proyectos que llevan la etiqueta de categoría " + (c ? c.label : catKey) + "."
+      });
+    }
+
+    function render() {
+      var html = "";
+      switch (state.view) {
+        case "inicio":           html = viewHome(); break;
+        case "proyectos":        html = viewProyectos(); break;
+        case "carpetas":         html = carpetasView(); break;
+        case "pendientes":       html = viewPendientes(); break;
+        case "horario":          html = viewHorario(); break;
+        case "clientes":         html = clientesView(); break;
+        case "automatizaciones": html = viewCategoria("automatizaciones"); break;
+        case "ia_tools":         html = viewCategoria("ia_tools"); break;
+        case "youtube":          html = viewCategoria("youtube_personal"); break;
+        case "documentacion":    html = documentacionView(); break;
+        case "borradores":       html = viewBorradores(); break;
+        case "configuracion":    html = configuracionView(); break;
+        default:                 html = viewHome();
+      }
+      content.innerHTML = html;
+      renderNav();
+    }
+
+    /* =========================================================
+       10. Interacciones
+       ========================================================= */
+
+    function currentCategoryOfView() {
+      for (var i = 0; i < NAV.length; i++) {
+        if (NAV[i].view === state.view && NAV[i].cat) return NAV[i].cat;
+      }
+      return null;
+    }
+
+    function switchView(view) {
+      state.view = view;
+      var forcedCat = currentCategoryOfView();
+      state.filter = forcedCat || null;
+      closeSidebar();
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function applyCategoryFilter(key) {
+      state.filter = key || null;
+      // Si la vista actual no muestra lista de proyectos, saltamos a Proyectos.
+      var listViews = ["inicio", "proyectos", "automatizaciones", "ia_tools", "youtube"];
+      if (listViews.indexOf(state.view) === -1) {
+        state.view = "proyectos";
+        renderNav();
+      }
+      render();
+      var target = document.getElementById("projects-section");
+      if (target && listViews.indexOf(state.view) !== -1) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    content.addEventListener("click", function (ev) {
+      var focus = ev.target.closest("[data-focus]");
+      if (focus && content.contains(focus)) {
+        state.view = "proyectos";
+        state.filter = null;
+        state.status = null;
+        state.search = "";
+        document.getElementById("searchInput").value = "";
+        render();
+        var destination = document.getElementById("project-" + focus.getAttribute("data-focus"));
+        if (destination) destination.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+      var btn = ev.target.closest("[data-view]");
+      if (btn && content.contains(btn)) { switchView(btn.getAttribute("data-view")); return; }
+
+      var act = ev.target.closest("[data-act]");
+      if (act && content.contains(act) && act.tagName !== "INPUT") { handleAction(act); return; }
+
+      var catBtn = ev.target.closest("[data-cat]");
+      if (catBtn && content.contains(catBtn)) {
+        applyCategoryFilter(catBtn.getAttribute("data-cat") || null);
+      }
+    });
+
+    content.addEventListener("change", function (ev) {
+      var t = ev.target;
+      if (t && t.id === "projectStatus") {
+        state.status = t.value || null;
+        render();
+        return;
+      }
+      if (t && t.getAttribute && t.getAttribute("data-act") === "toggle-task") {
+        toggleTask(t.getAttribute("data-id"), t.checked);
+      }
+    });
+
+    content.addEventListener("keydown", function (ev) {
+      var t = ev.target;
+      if (t && t.getAttribute && t.getAttribute("data-task-input") && ev.key === "Enter") {
+        ev.preventDefault();
+        addTask(t.getAttribute("data-task-input"), t.value);
+      }
+    });
+
+    content.addEventListener("toggle", function (ev) {
+      var d = ev.target;
+      if (d && d.getAttribute && d.getAttribute("data-tasks") != null) {
+        var pid = d.getAttribute("data-tasks");
+        if (d.open) state.openTasks[pid] = true; else delete state.openTasks[pid];
+      }
+    }, true);
+
+    document.getElementById("nav").addEventListener("click", function (ev) {
+      var btn = ev.target.closest("[data-view]");
+      if (btn) switchView(btn.getAttribute("data-view"));
+    });
+
+    document.querySelectorAll("[data-goto]").forEach(function (el) {
+      el.addEventListener("click", function () { switchView(el.getAttribute("data-goto")); });
+    });
+
+    // Buscador: filtra la lista de proyectos mientras se escribe.
+    var searchInput = document.getElementById("searchInput");
+    var searchTimer = null;
+    searchInput.addEventListener("input", function () {
+      clearTimeout(searchTimer);
+      var val = searchInput.value.trim().toLowerCase();
+      searchTimer = setTimeout(function () {
+        state.search = val;
+        var listViews = ["inicio", "proyectos", "automatizaciones", "ia_tools", "youtube"];
+        if (val && listViews.indexOf(state.view) === -1) {
+          state.view = "proyectos";
+          renderNav();
+        }
+        render();
+      }, 120);
+    });
+
+    // Tema
+    var themeBtn = document.getElementById("themeBtn");
+    var themeIcon = document.getElementById("themeIcon");
+
+    function applyTheme() {
+      document.body.classList.toggle("dark", state.theme === "dark");
+      themeIcon.innerHTML = state.theme === "dark" ? ICONS.moon : ICONS.sun;
+      try { window.localStorage && window.localStorage.setItem("monoga-theme", state.theme); } catch (e) {}
+    }
+    themeBtn.addEventListener("click", function () {
+      state.theme = state.theme === "dark" ? "light" : "dark";
+      applyTheme();
+    });
+
+    // Sidebar en movil
+    var sidebar = document.getElementById("sidebar");
+    var backdrop = document.getElementById("backdrop");
+    function openSidebar() { sidebar.classList.add("open"); backdrop.classList.add("show"); }
+    function closeSidebar() { sidebar.classList.remove("open"); backdrop.classList.remove("show"); }
+    document.getElementById("menuBtn").addEventListener("click", openSidebar);
+    backdrop.addEventListener("click", closeSidebar);
+    document.getElementById("collapseBtn").addEventListener("click", function () {
+      if (window.matchMedia("(max-width: 900px)").matches) closeSidebar();
+    });
+
+    /* =========================================================
+       11. Capa de control (servidor local opcional)
+       ========================================================= */
+
+    function projectById(id) {
+      for (var i = 0; i < PROJECTS.length; i++) {
+        if (PROJECTS[i].id === id) return PROJECTS[i];
+      }
+      return null;
+    }
+
+    function tasksForProject(id) {
+      return TASKS.filter(function (t) { return t.projectId === id; });
+    }
+
+    function taskStatusMeta(s) {
+      if (s === "hecha") return { label: "Hecha", color: "#16a34a" };
+      if (s === "en_progreso") return { label: "En progreso", color: "#d97706" };
+      return { label: "Pendiente", color: "#2563eb" };
+    }
+
+    function projectChipHTML(pid) {
+      var p = projectById(pid);
+      return '<span class="proj-chip">' + esc(p ? p.name : pid) + "</span>";
+    }
+
+    function taskRowHTML(t, opts) {
+      opts = opts || {};
+      var m = taskStatusMeta(t.status);
+      var done = t.status === "hecha" || !!t.doneAt;
+      return '<div class="task-row' + (done ? " is-done" : "") + '">' +
+        '<input type="checkbox" data-act="toggle-task" data-id="' + esc(t.id) + '"' +
+          (done ? " checked" : "") + ' aria-label="Marcar como hecha" />' +
+        '<span class="task-text">' + esc(t.text) + "</span>" +
+        (opts.showProject ? projectChipHTML(t.projectId) : "") +
+        '<span class="task-pill" style="background:' + m.color + '1f;color:' + m.color + '">' + esc(m.label) + "</span>" +
+        '<button class="task-del" type="button" data-act="del-task" data-id="' + esc(t.id) +
+          '" aria-label="Eliminar tarea">&#215;</button>' +
+      "</div>";
+    }
+
+    function reviewLinksHTML(p) {
+      if (API.mode !== "control") return "";
+      var links = "";
+      if (p.hasReadme) {
+        links += '<button class="act-btn" type="button" data-act="view-file" data-project="' + esc(p.id) +
+                 '" data-file="README.md">Ver README</button>';
+      }
+      if (p.hasHandoff) {
+        links += '<button class="act-btn" type="button" data-act="view-file" data-project="' + esc(p.id) +
+                 '" data-file="HANDOFF.md">Ver HANDOFF</button>';
+      }
+      return links ? '<span class="review-links">' + links + "</span>" : "";
+    }
+
+    function projectActionsHTML(p) {
+      if (API.mode !== "control") {
+        return '<div class="proj-actions"><a class="act-btn" href="../' +
+          esc(String(p.path || "").split("/").map(encodeURIComponent).join("/")) +
+          '/" title="Abrir ruta local en modo lectura">Ver carpeta local</a></div>';
+      }
+      var dis = p.exists === false ? " disabled" : "";
+      // Solo los proyectos que declaran un bloque `run` en el registro pueden
+      // encenderse. El comando vive en el servidor, no aca.
+      var runBtn = p.run && p.run.label
+        ? '<button class="act-btn act-btn-run" type="button" data-act="open" data-mode="run" data-project="' +
+          esc(p.id) + '"' + dis + ">" + esc(p.run.label) + "</button>"
+        : "";
+      return '<div class="proj-actions">' +
+        runBtn +
+        '<button class="act-btn" type="button" data-act="open" data-mode="folder" data-project="' + esc(p.id) + '"' + dis + ">Abrir carpeta</button>" +
+        '<button class="act-btn" type="button" data-act="open" data-mode="terminal" data-project="' + esc(p.id) + '"' + dis + ">Abrir terminal</button>" +
+        '<button class="act-btn" type="button" data-act="open" data-mode="editor" data-project="' + esc(p.id) + '"' + dis + ">Abrir editor</button>" +
+        reviewLinksHTML(p) +
+      "</div>";
+    }
+
+    function projectTasksHTML(p) {
+      if (API.mode !== "control") return "";
+      var list = tasksForProject(p.id);
+      var body = list.length
+        ? '<div class="task-list">' + list.map(function (t) { return taskRowHTML(t, {}); }).join("") + "</div>"
+        : '<div class="task-empty">Sin tareas para este proyecto.</div>';
+      return '<details class="task-expander" data-tasks="' + esc(p.id) + '"' +
+        (state.openTasks[p.id] ? " open" : "") + ">" +
+        "<summary>Tareas (" + list.length + ")</summary>" +
+        body +
+        '<input class="task-input" type="text" data-task-input="' + esc(p.id) +
+          '" placeholder="Nueva tarea para ' + esc(p.name) +
+          '" aria-label="Nueva tarea para ' + esc(p.name) + '" />' +
+      "</details>";
+    }
+
+    /* ---- Transporte ---- */
+
+    function apiCall(method, path, body) {
+      var opts = { method: method, headers: {} };
+      if (method !== "GET") {
+        opts.headers["X-Monoga-OS"] = "1";
+        opts.headers["Content-Type"] = "application/json";
+      }
+      if (body !== undefined) opts.body = JSON.stringify(body);
+      return fetch(path, opts).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (json) {
+          return { status: res.status, ok: res.ok, json: json };
+        });
+      });
+    }
+
+    function applyState(payload) {
+      API.mode = "control";
+      API.version = payload.apiVersion;
+      API.rootPath = payload.rootPath || "";
+      if (Array.isArray(payload.categories)) CATEGORIES = payload.categories;
+      if (payload.statuses && typeof payload.statuses === "object") STATUSES = payload.statuses;
+      if (Array.isArray(payload.projects)) PROJECTS = payload.projects;
+      if (Array.isArray(payload.clients)) CLIENTS = payload.clients;
+      if (Array.isArray(payload.findings)) FINDINGS = payload.findings;
+      if (Array.isArray(payload.tasks)) TASKS = payload.tasks;
+    }
+
+    function refresh() {
+      return apiCall("GET", "/api/state").then(function (r) {
+        if (r.ok && r.json && r.json.ok) {
+          live.signature = payloadSignature(r.json);
+          applyState(r.json);
+          render();
+        }
+      }).catch(function () {});
+    }
+
+    /* ---- Actualizacion en vivo ---- */
+
+    // Polo de sondeo: solo activo en modo control y con la pestana visible.
+    var live = {
+      timer: null,
+      ticker: null,
+      failures: 0,
+      lastOk: 0,
+      signature: null
+    };
+
+    function liveEl() { return document.getElementById("liveStatusText"); }
+
+    function setLiveText(text, isError) {
+      var el = liveEl();
+      if (!el) return;
+      el.textContent = text;
+      el.classList.toggle("is-error", !!isError);
+    }
+
+    function setRefreshVisible(visible) {
+      var btn = document.getElementById("refreshBtn");
+      if (btn) btn.style.display = visible ? "" : "none";
+    }
+
+    // Firma barata del payload: usa updatedAt si el server lo expone;
+    // si no, una serializacion estable de todo el estado.
+    function payloadSignature(payload) {
+      if (payload && payload.updatedAt != null) return "t:" + String(payload.updatedAt);
+      try { return "j:" + JSON.stringify(payload); } catch (e) { return "x:" + Date.now(); }
+    }
+
+    function liveTick() {
+      if (API.mode !== "control" || live.failures > 0 || !live.lastOk) return;
+      var secs = Math.max(0, Math.round((Date.now() - live.lastOk) / 1000));
+      setLiveText("Actualizado hace " + secs + "s", false);
+    }
+
+    function schedulePoll(delay) {
+      if (live.timer) { clearTimeout(live.timer); live.timer = null; }
+      if (API.mode !== "control") return;
+      if (document.visibilityState !== "visible") return;
+      live.timer = setTimeout(pollState, delay);
+    }
+
+    function pollState() {
+      live.timer = null;
+      if (API.mode !== "control") return;
+      return fetch("/api/state", { cache: "no-store" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("http_" + res.status);
+          return res.json();
+        })
+        .then(function (payload) {
+          if (!payload || !payload.ok) throw new Error("bad_payload");
+          // Solo re-renderiza si el estado realmente cambio: evita parpadeo.
+          var sig = payloadSignature(payload);
+          if (sig !== live.signature) {
+            live.signature = sig;
+            applyState(payload);
+            render();
+          }
+          live.failures = 0;
+          live.lastOk = Date.now();
+          setLiveText("Actualizado hace 0s", false);
+          schedulePoll(5000);
+        })
+        .catch(function () {
+          // Conserva lo ultimo bueno en pantalla y retrocede el sondeo.
+          live.failures++;
+          setLiveText("Sin conexión", true);
+          schedulePoll(Math.min(60000, 5000 * Math.pow(2, live.failures)));
+        });
+    }
+
+    function startLive() {
+      setRefreshVisible(true);
+      live.failures = 0;
+      live.lastOk = Date.now();
+      setLiveText("Actualizado hace 0s", false);
+      if (!live.ticker) live.ticker = setInterval(liveTick, 1000);
+      schedulePoll(5000);
+    }
+
+    function startReadonly() {
+      setRefreshVisible(false);
+      if (live.timer) { clearTimeout(live.timer); live.timer = null; }
+      if (live.ticker) { clearInterval(live.ticker); live.ticker = null; }
+      setLiveText("Modo lectura — sin actualización automática", false);
+    }
+
+    document.addEventListener("visibilitychange", function () {
+      if (API.mode !== "control") return;
+      if (document.visibilityState === "visible") {
+        schedulePoll(0);
+      } else if (live.timer) {
+        clearTimeout(live.timer);
+        live.timer = null;
+      }
+    });
+
+    var refreshBtn = document.getElementById("refreshBtn");
+    if (refreshBtn) {
+      refreshBtn.addEventListener("click", function () {
+        if (API.mode !== "control") return;
+        live.failures = 0;
+        if (live.timer) { clearTimeout(live.timer); live.timer = null; }
+        pollState();
+      });
+    }
+
+    /* ---- Avisos ---- */
+
+    function showToast(message, isError) {
+      var wrap = document.getElementById("toastWrap");
+      if (!wrap) return;
+      var el = document.createElement("div");
+      el.className = "toast" + (isError ? " is-error" : "");
+      el.textContent = message;
+      wrap.appendChild(el);
+      setTimeout(function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      }, isError ? 6000 : 3500);
+    }
+
+    var bannerEl = document.getElementById("modeBanner");
+    var bannerClose = document.getElementById("bannerClose");
+    if (bannerClose && bannerEl) {
+      bannerClose.addEventListener("click", function () { bannerEl.hidden = true; });
+    }
+    function showBanner() { if (bannerEl) bannerEl.hidden = false; }
+    function hideBanner() { if (bannerEl) bannerEl.hidden = true; }
+
+    function errorLabel(code) {
+      var map = {
+        unknown_project: "Proyecto desconocido para el servidor.",
+        path_not_found: "La carpeta no existe en disco.",
+        empty_text: "La tarea no puede estar vacía.",
+        unknown_task: "La tarea ya no existe.",
+        bad_origin: "Origen no autorizado.",
+        missing_header: "Petición rechazada por el servidor.",
+        write_failed: "No se pudo guardar en disco.",
+        registry_error: "No se pudo leer el registro.",
+          bad_mode: "Modo de apertura inválido.",
+          run_not_configured: "Este proyecto no tiene arranque configurado en el registro.",
+          run_cwd_not_found: "No se encontró la carpeta desde donde debe arrancar el proyecto."
+        };
+      return map[code] || "Ocurrió un error inesperado.";
+    }
+
+    /* ---- Acciones ---- */
+
+    function handleAction(el) {
+      var act = el.getAttribute("data-act");
+      if (act === "open") {
+        openProject(el.getAttribute("data-project"), el.getAttribute("data-mode"));
+      } else if (act === "view-file") {
+        var url = "/api/file?projectId=" + encodeURIComponent(el.getAttribute("data-project")) +
+                  "&name=" + encodeURIComponent(el.getAttribute("data-file"));
+        window.open(url, "_blank", "noopener");
+      } else if (act === "del-task") {
+        deleteTask(el.getAttribute("data-id"));
+      }
+    }
+
+    function openProject(projectId, mode) {
+      // El arranque puede tardar: el servidor espera a que el proyecto responda.
+      if (mode === "run") showToast("Encendiendo el proyecto... puede tardar hasta un minuto", false);
+      apiCall("POST", "/api/open", { projectId: projectId, mode: mode })
+        .then(function (r) {
+          var j = r.json || {};
+          if (!r.ok || !j.ok) { showToast(errorLabel(j.error), true); return; }
+          if (j.mode === "run") {
+            if (j.alreadyRunning) showToast("Ya estaba encendido. Abriendo...", false);
+            else if (j.ready) showToast("Encendido. Abriendo en el navegador...", false);
+            else if (j.ready === false) showToast("Arrancó pero no respondió a tiempo. Revisá el proyecto.", true);
+            else showToast("Proyecto encendido.", false);
+            return;
+          }
+          if (j.fellBack) showToast("code no encontrado, se abrió la carpeta", false);
+          else if (j.opened === "explorer") showToast("Abierto en explorer", false);
+          else if (j.opened === "powershell") showToast("Abierto en PowerShell", false);
+          else if (j.opened === "editor") showToast("Abierto en el editor", false);
+          else showToast("Abierto", false);
+        })
+        .catch(function () { showToast("No se pudo conectar con el servidor.", true); });
+    }
+
+    function addTask(projectId, text) {
+      text = String(text == null ? "" : text).trim();
+      if (!text) { showToast("La tarea no puede estar vacía.", true); return; }
+      state.openTasks[projectId] = true;
+      apiCall("POST", "/api/tasks", { projectId: projectId, text: text })
+        .then(function (r) {
+          if (!r.ok || !r.json.ok) { showToast(errorLabel(r.json && r.json.error), true); return; }
+          showToast("Tarea agregada", false);
+          refresh();
+        })
+        .catch(function () { showToast("No se pudo conectar con el servidor.", true); });
+    }
+
+    function toggleTask(id, checked) {
+      apiCall("PATCH", "/api/tasks", { id: id, status: checked ? "hecha" : "pendiente" })
+        .then(function (r) {
+          if (!r.ok || !r.json.ok) { showToast(errorLabel(r.json && r.json.error), true); refresh(); return; }
+          refresh();
+        })
+        .catch(function () { showToast("No se pudo conectar con el servidor.", true); });
+    }
+
+    function deleteTask(id) {
+      apiCall("DELETE", "/api/tasks?id=" + encodeURIComponent(id))
+        .then(function (r) {
+          if (!r.ok || !r.json.ok) { showToast(errorLabel(r.json && r.json.error), true); return; }
+          showToast("Tarea eliminada", false);
+          refresh();
+        })
+        .catch(function () { showToast("No se pudo conectar con el servidor.", true); });
+    }
+
+    /* ---- Arranque del modo ---- */
+
+    function bootstrap() {
+      // Primer dibujo con el registro local: nunca una página en blanco.
+      try {
+        render();
+      } catch (err) {
+        showFatal("Error al dibujar el panel",
+          "Ocurrió un problema al interpretar el registro. Detalle: " + esc(err && err.message ? err.message : String(err)));
+        return;
+      }
+
+      var controller = ("AbortController" in window) ? new AbortController() : null;
+      var timer = setTimeout(function () { if (controller) controller.abort(); }, 1500);
+      var opts = controller ? { signal: controller.signal } : {};
+
+      fetch("/api/state", opts)
+        .then(function (res) {
+          if (!res.ok) throw new Error("http_" + res.status);
+          return res.json();
+        })
+        .then(function (payload) {
+          clearTimeout(timer);
+          if (!payload || !payload.ok) throw new Error("bad_payload");
+          applyState(payload);
+          live.signature = payloadSignature(payload);
+          hideBanner();
+          render();
+          startLive();
+        })
+        .catch(function () {
+          clearTimeout(timer);
+          // Sin servidor: modo lectura honesto. La página sigue funcionando.
+          if (API.mode !== "control") { showBanner(); startReadonly(); }
+        });
+    }
+
+    /* =========================================================
+       12. Arranque
+       ========================================================= */
+
+    applyTheme();
+    renderNav();
+    bootstrap();
+  })();
+  </script>
+</body>
+</html>

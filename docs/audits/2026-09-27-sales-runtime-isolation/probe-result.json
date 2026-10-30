@@ -1,0 +1,35 @@
+{
+  "probe": "isolated-root-checkout-and-dispatcher-dryrun",
+  "network": "blocked by boundary stub; provider was not invoked",
+  "secrets": "source evaluated with an explicit empty environment and stubbed dotenv",
+  "checkout": {
+    "provider": "stripe_mock",
+    "urlPrefix": "https://checkout.stripe.com/c/pay/cs_test_",
+    "sessionPrefix": "cs_test_"
+  },
+  "nestedSourceCheckout": {
+    "urlPrefix": "https://checkout.stripe.com/pay/cs_live_fi",
+    "classification": "string-generated URL; no provider request was available to this probe"
+  },
+  "dispatch": {
+    "result": {
+      "totalQueued": 1,
+      "dispatched": 1,
+      "failed": 0
+    },
+    "before": {
+      "email": "QUEUED",
+      "prospect": "OUTREACH_READY"
+    },
+    "after": {
+      "email": "SENT",
+      "prospect": "EMAIL_SENT"
+    }
+  },
+  "identity": {
+    "generatorSourceSha256": "8c738161719e16647b5b60c08b0ae35c0cb070522eadf856f0ef07c123acf770",
+    "generatorDistSha256": "fed3ced8e0adc0e90ecdee10cf7e3835b949e1f0abb316a2bad77df59c50625d",
+    "freshCjsTranspileSha256": "b0bb6e8e6e16b7cdd4d3be19e6750d57889fa42b5a11fdd20d613a97d06d3e12",
+    "distMatchesFreshCjsTranspile": false
+  }
+}
